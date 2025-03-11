@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            color: #333;
+        }
+        .header {
+            margin-bottom: 30px;
+        }
+        .invoice-title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .parties {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        .party {
+            width: 45%;
+        }
+        .party-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .gstin {
+            font-size: 12px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+        .address {
+            font-size: 12px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .amount {
+            text-align: right;
+        }
+        .total-row {
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 40px;
+            font-size: 12px;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+        .invoice-details {
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="invoice-title">INVOICE</div>
+        <div class="invoice-details">
+            <div>Invoice Number: <span th:text="${invoiceNumber}">INV-12345</span></div>
+            <div>Date: <span th:text="${invoiceDate}">01/01/2023</span></div>
+        </div>
+    </div>
+    
+    <div class="parties">
+        <div class="party">
+            <div class="party-title">From:</div>
+            <div th:text="${invoice.seller}">Seller Name</div>
+            <div class="gstin">GSTIN: <span th:text="${invoice.sellerGstin}">29AABBCCDD121ZD</span></div>
+            <div class="address" th:text="${invoice.sellerAddress}">Seller Address</div>
+        </div>
+        <div class="party">
+            <div class="party-title">To:</div>
+            <div th:text="${invoice.buyer}">Buyer Name</div>
+            <div class="gstin">GSTIN: <span th:text="${invoice.buyerGstin}">29AABBCCDD131ZD</span></div>
+            <div class="address" th:text="${invoice.buyerAddress}">Buyer Address</div>
+        </div>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Item Description</th>
+                <th>Quantity</th>
+                <th>Rate</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="item : ${invoice.items}">
+                <td th:text="${item.name}">Product Name</td>
+                <td th:text="${item.quantity}">1</td>
+                <td class="amount" th:text="${#numbers.formatDecimal(item.rate, 1, 2)}">100.00</td>
+                <td class="amount" th:text="${#numbers.formatDecimal(item.amount, 1, 2)}">100.00</td>
+            </tr>
+            <tr class="total-row">
+                <td colspan="3" style="text-align: right;">Total Amount:</td>
+                <td class="amount" th:text="${#numbers.formatDecimal(total, 1, 2)}">100.00</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="footer">
+        <p>Thank you for your business!</p>
+        <p>This is a computer-generated invoice and does not require a signature.</p>
+    </div>
+</body>
+</html>
